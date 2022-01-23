@@ -1,0 +1,266 @@
+[
+  {
+    "Book": "Genesis",
+    "Chapter": "50"
+  },
+  {
+    "Book": "Exodus",
+    "Chapter": "40"
+  },
+  {
+    "Book": "Leviticus",
+    "Chapter": "27"
+  },
+  {
+    "Book": "Numbers",
+    "Chapter": "36"
+  },
+  {
+    "Book": "Deuteronomy",
+    "Chapter": "34"
+  },
+  {
+    "Book": "Joshua",
+    "Chapter": "24"
+  },
+  {
+    "Book": "Judges",
+    "Chapter": "21"
+  },
+  {
+    "Book": "Ruth",
+    "Chapter": "4"
+  },
+  {
+    "Book": "1 Samuel",
+    "Chapter": "31"
+  },
+  {
+    "Book": "2 Samuel",
+    "Chapter": "24"
+  },
+  {
+    "Book": "1 Kings",
+    "Chapter": "22"
+  },
+  {
+    "Book": "2 Kings",
+    "Chapter": "25"
+  },
+  {
+    "Book": "1 Chronicles",
+    "Chapter": "29"
+  },
+  {
+    "Book": "2 Chronicles",
+    "Chapter": "36"
+  },
+  {
+    "Book": "Ezra",
+    "Chapter": "10"
+  },
+  {
+    "Book": "Nehemiah",
+    "Chapter": "13"
+  },
+  {
+    "Book": "Esther",
+    "Chapter": "10"
+  },
+  {
+    "Book": "Job",
+    "Chapter": "42"
+  },
+  {
+    "Book": "Psalm",
+    "Chapter": "150"
+  },
+  {
+    "Book": "Proverbs",
+    "Chapter": "31"
+  },
+  {
+    "Book": "Ecclesiastes",
+    "Chapter": "12"
+  },
+  {
+    "Book": "Song of Songs",
+    "Chapter": "8"
+  },
+  {
+    "Book": "Isaiah",
+    "Chapter": "66"
+  },
+  {
+    "Book": "Jeremiah",
+    "Chapter": "52"
+  },
+  {
+    "Book": "Lamentations",
+    "Chapter": "5"
+  },
+  {
+    "Book": "Ezekiel",
+    "Chapter": "48"
+  },
+  {
+    "Book": "Daniel",
+    "Chapter": "12"
+  },
+  {
+    "Book": "Hosea",
+    "Chapter": "14"
+  },
+  {
+    "Book": "Joel",
+    "Chapter": "3"
+  },
+  {
+    "Book": "Amos",
+    "Chapter": "9"
+  },
+  {
+    "Book": "Obadiah",
+    "Chapter": "1"
+  },
+  {
+    "Book": "Jonah",
+    "Chapter": "4"
+  },
+  {
+    "Book": "Micah",
+    "Chapter": "7"
+  },
+  {
+    "Book": "Nahum",
+    "Chapter": "3"
+  },
+  {
+    "Book": "Habakkuk",
+    "Chapter": "3"
+  },
+  {
+    "Book": "Zephaniah",
+    "Chapter": "3"
+  },
+  {
+    "Book": "Haggai",
+    "Chapter": "2"
+  },
+  {
+    "Book": "Zechariah",
+    "Chapter": "14"
+  },
+  {
+    "Book": "Malachi",
+    "Chapter": "4"
+  },
+  {
+    "Book": "Matthew",
+    "Chapter": "28"
+  },
+  {
+    "Book": "Mark",
+    "Chapter": "16"
+  },
+  {
+    "Book": "Luke",
+    "Chapter": "24"
+  },
+  {
+    "Book": "John",
+    "Chapter": "21"
+  },
+  {
+    "Book": "Acts",
+    "Chapter": "28"
+  },
+  {
+    "Book": "Romans",
+    "Chapter": "16"
+  },
+  {
+    "Book": "1 Corinthians",
+    "Chapter": "16"
+  },
+  {
+    "Book": "2 Corinthians",
+    "Chapter": "13"
+  },
+  {
+    "Book": "Galatians",
+    "Chapter": "6"
+  },
+  {
+    "Book": "Ephesians",
+    "Chapter": "6"
+  },
+  {
+    "Book": "Philippians",
+    "Chapter": "4"
+  },
+  {
+    "Book": "Colossians",
+    "Chapter": "4"
+  },
+  {
+    "Book": "1 Thessalonians",
+    "Chapter": "5"
+  },
+  {
+    "Book": "2 Thessalonians",
+    "Chapter": "3"
+  },
+  {
+    "Book": "1 Timothy",
+    "Chapter": "6"
+  },
+  {
+    "Book": "2 Timothy",
+    "Chapter": "4"
+  },
+  {
+    "Book": "Titus",
+    "Chapter": "3"
+  },
+  {
+    "Book": "Philemon",
+    "Chapter": "1"
+  },
+  {
+    "Book": "Hebrews",
+    "Chapter": "13"
+  },
+  {
+    "Book": "James",
+    "Chapter": "5"
+  },
+  {
+    "Book": "1 Peter",
+    "Chapter": "5"
+  },
+  {
+    "Book": "2 Peter",
+    "Chapter": "3"
+  },
+  {
+    "Book": "1 John",
+    "Chapter": "5"
+  },
+  {
+    "Book": "2 John",
+    "Chapter": "1"
+  },
+  {
+    "Book": "3 John",
+    "Chapter": "1"
+  },
+  {
+    "Book": "Jude",
+    "Chapter": "1"
+  },
+  {
+    "Book": "Revelation",
+    "Chapter": "22"
+  }
+]
