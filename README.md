@@ -4,7 +4,7 @@ A custom RSS feed that enables users to read a chapter per day on their RSS feed
 
 ## How to use
 
-Build an RSS feed URL like the below examples. You specify the plan (ot, nt, full), the [translation code](./translations.json), start date, and the number of chapters you want to have added to your RSS Feed each day.
+Build an RSS feed URL like the below examples. You specify the plan (ot, nt, full), the [translation code](./public/translations.json), start date, and the number of chapters you want to have added to your RSS Feed each day.
 
 ## Examples
 
