@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "tsc && rm -rf ./dist/public && cp -r ./public ./dist/public/ && nodemon dist/index.js",
-    "lint": "eslint . --ext .ts,.tsx"
+    "lint": "eslint . --ext .ts,.tsx",
+    "build": "rm -rf ./dist/ && tsc"
   }
 }

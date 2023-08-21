@@ -1,17 +1,17 @@
 /* eslint-disable */
 import express from 'express';
 import path from 'path';
-import fs from 'fs';
 import RSS from 'rss';
 import compression from 'compression';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-
+import fullBookList from './resources/full.json';
+import otBookList from './resources/ot.json';
+import ntBookList from './resources/nt.json';
 import translationsJSON from './resources/translations.json';
 // Check if the code is running in development or production
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // Set the resources path based on the environment
-const resourcesPath = './resources/';
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -45,10 +45,6 @@ app.use(
 const port = 3000;
 const bibleGatewaySlug = 'https://www.biblegateway.com/passage/?search=';
 
-const fullBookList = GetBookList('full');
-const otBookList = GetBookList('ot');
-const ntBookList = GetBookList('nt');
-
 interface BookListMap {
   full: typeof fullBookList;
   ot: typeof otBookList;
@@ -66,16 +62,6 @@ interface RSSItem {
   url: string;
   author: string;
   date: Date;
-}
-
-function GetBookList(listName: string) {
-  // Get absolute path to the file
-
-  const filePath = path.join(__dirname, `${resourcesPath + listName}.json`);
-
-  // Read file synchronously
-  const fileContent = fs.readFileSync(filePath, 'utf-8');
-  return JSON.parse(fileContent);
 }
 
 if (isDevelopment) {
