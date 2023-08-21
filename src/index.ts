@@ -154,11 +154,6 @@ function formatDateToyyyyMMdd(date: Date): string {
   return `${yyyy}${MM}${dd}`;
 }
 
-// Usage:
-const now = new Date();
-const formattedDate = formatDateToyyyyMMdd(now);
-console.log(formattedDate);
-
 // Build the RSS Feed Items
 const BuildRSSFeedItems = (
   plan: string,
