@@ -3,15 +3,46 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import RSS from 'rss';
+import compression from 'compression';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 import translationsJSON from './resources/translations.json';
 // Check if the code is running in development or production
 const isDevelopment = process.env.NODE_ENV !== 'production';
 // Set the resources path based on the environment
-const resourcesPath = isDevelopment ? './resources/' : './resources/';
+const resourcesPath = './resources/';
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests, please try again later.',
+});
 
 const app = express();
-const port = 3003;
+app.use(compression());
+//Use Limit
+app.use(limiter);
+// Use Helmet
+app.use(helmet());
+app.use(helmet.hidePoweredBy());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"], // Only allow content from our own domain
+      scriptSrc: ["'self'"], // Only allow scripts from our own domain
+    },
+  })
+);
+app.use(
+  helmet.hsts({
+    maxAge: 31536000, // Preferably set it for one year
+    includeSubDomains: true, // Apply rule to subdomains as well
+    preload: true,
+  })
+);
+
+const port = 3000;
 const bibleGatewaySlug = 'https://www.biblegateway.com/passage/?search=';
 
 const fullBookList = GetBookList('full');
@@ -47,34 +78,36 @@ function GetBookList(listName: string) {
   return JSON.parse(fileContent);
 }
 
-app.use(express.static(path.join(__dirname, 'public')));
+if (isDevelopment) {
+  app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/index.html'));
-});
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+  });
+}
 
-//localhost:3003/ot/esv/20220101/10/feed.rss
-app.get('/:plan/:translation/:startDate/:chapters/feed.rss', (req, res) => {
+//localhost:3000/rssbible/ot/esv/20220101/10/feed.rss
+app.get('/rssbible/:plan/:translation/:startDate/:chapters/feed.rss', (req, res) => {
+  let plan = SanitizePlan(req.params.plan);
+  let startDate = SanitizeDate(req.params.startDate);
+  let chapters = SanitizeChapters(req.params.chapters);
+  let translation = SanitizeTranslation(req.params.translation);
+
   let feed = new RSS({
     title: 'Bible Plan Feed',
     description: 'Go to www.bibleplanfeed.com for more information.',
-    feed_url: `https://www.bibleplanfeed.com/${req.params.plan}/${req.params.startDate}/${req.params.chapters}/feed.rss`,
+    feed_url: `https://www.bibleplanfeed.com/${plan}/${startDate}/${chapters}/feed.rss`,
     site_url: 'https://www.bibleplanfeed.com/',
     image_url: 'https://www.bibleplanfeed.com/icon.png',
-    managingEditor: 'Jordan Tryon',
-    webMaster: 'Jordan Tryon',
-    copyright: 'Jordan Tryon',
+    managingEditor: 'github.com/tryonlinux',
+    webMaster: 'github.com/tryonlinux',
+    copyright: 'github.com/tryonlinux',
     language: 'en',
     categories: ['NONE'],
     pubDate: new Date().toString(),
     ttl: 60,
   });
-  BuildRSSFeedItems(
-    req.params.plan,
-    req.params.translation,
-    parseDate(req.params.startDate),
-    parseInt(req.params.chapters)
-  ).map((item: RSSItem) => {
+  BuildRSSFeedItems(plan, translation, startDate, chapters).map((item: RSSItem) => {
     feed.item({
       title: item.title,
       description: item.description,
@@ -87,6 +120,45 @@ app.get('/:plan/:translation/:startDate/:chapters/feed.rss', (req, res) => {
   res.type('application/rss+xml');
   res.send(feed.xml({ indent: true }));
 });
+//Ensure the plan is valid, if not return full
+const SanitizePlan = (plan: any): 'nt' | 'ot' | 'full' => {
+  const validValues: Array<'nt' | 'ot' | 'full'> = ['nt', 'ot', 'full'];
+  return validValues.includes(plan) ? plan : 'full';
+};
+
+//Ensure the date is valid, if not return today
+const SanitizeDate = (dateString: string): Date => {
+  if (dateString.length !== 8) {
+    return new Date(); // Return today's date as default
+  }
+  try {
+    const year = parseInt(dateString.substring(0, 4));
+    const month = parseInt(dateString.substring(4, 6)) - 1; // months are 0-indexed in JavaScript
+    const day = parseInt(dateString.substring(6, 8));
+
+    return new Date(year, month, day);
+  } catch {
+    return new Date();
+  }
+};
+
+//Ensure the translation is valid, if not return ESV
+const SanitizeTranslation = (translation: string): string => {
+  return CheckTranslation(translation) ? translation : 'ESV';
+};
+
+//Ensure the Chapter is valid, if not return 1
+const SanitizeChapters = (chapters: string): number => {
+  if (chapters.length > 2) {
+    return 1; // Return 1 if over 99 chapters
+  }
+
+  const result = parseInt(chapters, 10);
+  if (isNaN(result)) {
+    return 1;
+  }
+  return result;
+};
 
 // Build the RSS Feed Items
 const BuildRSSFeedItems = (
@@ -95,7 +167,6 @@ const BuildRSSFeedItems = (
   startDate: Date,
   numberOfChapters: number
 ): RSSItem[] => {
-  translation = CheckTranslation(translation) ? translation : 'ESV';
   let chaptersToGet = getDaysBetween(startDate) * numberOfChapters;
   let bookList;
   const bookListMap: BookListMap = {
@@ -128,14 +199,6 @@ function getDaysBetween(date: Date): number {
   return Math.floor(diffInMilliSeconds / (1000 * 60 * 60 * 24));
 }
 
-// Parse the date string from the url
-function parseDate(dateString: string): Date {
-  const year = parseInt(dateString.substring(0, 4));
-  const month = parseInt(dateString.substring(4, 6)) - 1; // months are 0-indexed in JavaScript
-  const day = parseInt(dateString.substring(6, 8));
-
-  return new Date(year, month, day);
-}
 // Check translation since this is a user field we don't want to pass bad stuff to bible gateway.
 const CheckTranslation = (translation: string): boolean =>
   translationsJSON.some((item) => item.Code === translation.toUpperCase());
