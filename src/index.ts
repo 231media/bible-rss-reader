@@ -72,22 +72,23 @@ if (isDevelopment) {
   });
 }
 
-//localhost:3000/rssbible/ot/esv/20220101/10/feed.rss
+//localhost:3000/rssbible/ot/esv/20230801/3/feed.rss
 app.get('/rssbible/:plan/:translation/:startDate/:chapters/feed.rss', (req, res) => {
   let plan = SanitizePlan(req.params.plan);
   let startDate = SanitizeDate(req.params.startDate);
   let chapters = SanitizeChapters(req.params.chapters);
   let translation = SanitizeTranslation(req.params.translation);
-
   let feed = new RSS({
     title: 'Bible Plan Feed',
     description: 'Go to www.bibleplanfeed.com for more information.',
-    feed_url: `https://www.bibleplanfeed.com/${plan}/${startDate}/${chapters}/feed.rss`,
+    feed_url: `https://www.bibleplanfeed.com/rssbible/${plan}/${formatDateToyyyyMMdd(
+      startDate
+    )}/${translation}/${chapters}/feed.rss`,
     site_url: 'https://www.bibleplanfeed.com/',
     image_url: 'https://www.bibleplanfeed.com/icon.png',
-    managingEditor: 'github.com/tryonlinux',
+    managingEditor: 'github.com/tryonlinux - Not affiliated with Bible Gateway',
     webMaster: 'github.com/tryonlinux',
-    copyright: 'github.com/tryonlinux',
+    copyright: 'github.com/tryonlinux  - Not affiliated with Bible Gateway',
     language: 'en',
     categories: ['NONE'],
     pubDate: new Date().toString(),
@@ -146,6 +147,18 @@ const SanitizeChapters = (chapters: string): number => {
   return result;
 };
 
+function formatDateToyyyyMMdd(date: Date): string {
+  const yyyy = date.getFullYear();
+  const MM = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}${MM}${dd}`;
+}
+
+// Usage:
+const now = new Date();
+const formattedDate = formatDateToyyyyMMdd(now);
+console.log(formattedDate);
+
 // Build the RSS Feed Items
 const BuildRSSFeedItems = (
   plan: string,
@@ -153,7 +166,8 @@ const BuildRSSFeedItems = (
   startDate: Date,
   numberOfChapters: number
 ): RSSItem[] => {
-  let chaptersToGet = getDaysBetween(startDate) * numberOfChapters;
+  let daysBetween = getDaysBetween(startDate);
+  let chaptersToGet = daysBetween * numberOfChapters;
   let bookList;
   const bookListMap: BookListMap = {
     full: fullBookList,
@@ -166,11 +180,15 @@ const BuildRSSFeedItems = (
   const processChapter = (chapter: BookChapter, index: number): RSSItem => ({
     title: `${chapter.Book} ${chapter.Chapter}`,
     description: `Day ${Math.ceil(
-      (index + 1) / 10
+      (index + 1) / numberOfChapters
     )} of ${plan.toUpperCase()} plan in ${translation.toUpperCase()}`,
     url: BuildBibleGatewayURL(chapter.Book, chapter.Chapter, translation),
     author: 'Bible Gateway',
-    date: new Date(),
+    date: new Date(
+      new Date().setDate(
+        new Date().getDate() - 1 - (daysBetween - Math.ceil((index + 1) / numberOfChapters))
+      )
+    ),
   });
 
   return bookList.slice(0, chaptersToGet).map(processChapter);
