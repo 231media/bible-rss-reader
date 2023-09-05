@@ -11,6 +11,7 @@ import ntBookList from './resources/nt.json';
 import translationsJSON from './resources/translations.json';
 // Check if the code is running in development or production
 const isDevelopment = process.env.NODE_ENV !== 'production';
+
 // Set the resources path based on the environment
 
 const limiter = rateLimit({
