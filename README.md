@@ -1,4 +1,4 @@
-# Bible Plan RSS Feed Generator (NOTE: NOT LIVE YET)
+# Bible Plan RSS Feed Generator
 
 A custom RSS feed that enables users to read a chapter per day on their RSS feed reader
 
